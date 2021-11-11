@@ -16,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class PerfilUsuario extends AppCompatActivity {
         txt_email = findViewById(R.id.txt_correo);
         imv_photo = findViewById(R.id.imv_foto);
 
-        txt_id.setText(info_user.get("user_id"));
+        txt_id.setText("ID: "+info_user.get("user_id"));
         txt_name.setText(info_user.get("user_name"));
         txt_email.setText(info_user.get("user_email"));
         String photo = info_user.get("user_photo");
@@ -44,7 +45,7 @@ public class PerfilUsuario extends AppCompatActivity {
 
         iniciarBaseDeDatos();
         leerTweets();
-        escribirTweets(info_user.get("user_name"));
+        //escribirTweets(info_user.get("user_name"));
     }
 
     public void cerrarSesion(View view){
@@ -63,14 +64,14 @@ public class PerfilUsuario extends AppCompatActivity {
         db_reference.child("Grupo3").child("tweets").addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    System.out.println(snapshot);
-                }
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                System.out.println(snapshot);
+            }
         }
 
         @Override
         public void onCancelled(DatabaseError error) {
-                System.out.println(error.toException());
+            System.out.println(error.toException());
         }
         });
     }
@@ -78,12 +79,23 @@ public class PerfilUsuario extends AppCompatActivity {
     public void escribirTweets(String autor){
         String tweet = "hola mundo firebase Grupo 3";
         String fecha = "10/06/2021"; //Fecha actual
-        Map<String, String> hola_tweet = new HashMap<String, String>();
-        hola_tweet.put("autor", autor);
-        hola_tweet.put("fecha", fecha);
         DatabaseReference tweets = db_reference.child("Grupo3").child("tweets");
         tweets.setValue(tweet);
         tweets.child(tweet).child("autor").setValue(autor);
         tweets.child(tweet).child("fecha").setValue(fecha);
+    }
+
+    public void publicar_tweet_user(String tweet, String fecha, String autor){
+        //String txt_fecha = fecha.toString();
+        DatabaseReference tweets = db_reference.child("Grupo3").child("tweets");
+        tweets.setValue(tweet);
+        tweets.child(tweet).child("autor").setValue(autor);
+        tweets.child(tweet).child("fecha").setValue(fecha);
+    }
+
+    public void pushTweetButton(View view){
+        publicar_tweet_user(findViewById(R.id.txtTweet).toString(),
+                            findViewById(R.id.txt_fecha).toString(),
+                            findViewById(R.id.txt_nombre).toString());
     }
 }
