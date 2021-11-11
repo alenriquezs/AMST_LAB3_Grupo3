@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.*;
 import com.google.android.gms.common.api.ApiException;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(),null);
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
         if (task.isSuccessful()) {
+            Toast.makeText(getApplicationContext(), "Se ha iniciado sesión en su cuenta", Toast.LENGTH_SHORT).show();
             FirebaseUser user = mAuth.getCurrentUser();
             updateUI(user);
         } else {

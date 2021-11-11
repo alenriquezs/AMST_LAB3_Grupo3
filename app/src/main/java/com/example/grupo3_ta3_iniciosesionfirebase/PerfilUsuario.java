@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -91,11 +92,13 @@ public class PerfilUsuario extends AppCompatActivity {
         tweets.setValue(tweet);
         tweets.child(tweet).child("autor").setValue(autor);
         tweets.child(tweet).child("fecha").setValue(fecha);
+
+        Toast.makeText(getApplicationContext(), "El tweet fue publicado", Toast.LENGTH_SHORT).show();
     }
 
     public void pushTweetButton(View view){
-        publicar_tweet_user(findViewById(R.id.txtTweet).toString(),
-                            findViewById(R.id.txt_fecha).toString(),
+        publicar_tweet_user(findViewById(R.id.userTweet).toString(),
+                            findViewById(R.id.fechaTweet).toString(),
                             findViewById(R.id.txt_nombre).toString());
     }
 }
