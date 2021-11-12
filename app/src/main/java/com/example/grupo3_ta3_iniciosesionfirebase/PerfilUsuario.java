@@ -55,8 +55,6 @@ public class PerfilUsuario extends AppCompatActivity {
 
         iniciarBaseDeDatos();
         leerTweets();
-
-        escribirTweets(info_user.get("user_name"));
     }
 
     public void cerrarSesion(View view){
@@ -87,23 +85,13 @@ public class PerfilUsuario extends AppCompatActivity {
         });
     }
 
-    public void escribirTweets(String autor){
-        String tweet = "Hola mundo firebase Grupo 3";
-        String fecha = "10/11/2021";
-        DatabaseReference tweets = db_reference.child("Grupo3").child("tweets");
-        tweets.setValue(tweet);
-        tweets.child(tweet).child("autor").setValue(autor);
-        tweets.child(tweet).child("fecha").setValue(fecha);
-    }
-
     public void pushTweet(View view){
         String user = info_user.get("user_name");
         String tweet = edTweet.getText().toString();
         String fecha = edFecha.getText().toString();
-        DatabaseReference tweets = db_reference.child("Grupo3").child("tweets").child("Rama "+user);
-        tweets.setValue(tweet);
-        tweets.child(tweet).child("autor").setValue(user);
-        tweets.child(tweet).child("fecha").setValue(fecha);
+        DatabaseReference tweets = db_reference.child("Grupo3").child("tweets").child(tweet);
+        tweets.child("autor").setValue(user);
+        tweets.child("fecha").setValue(fecha);
         Toast.makeText(getApplicationContext(), "El tweet fue publicado", Toast.LENGTH_SHORT).show();
     }
 
