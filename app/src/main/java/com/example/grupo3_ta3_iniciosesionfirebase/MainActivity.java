@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+        .requestIdToken(getString(R.string.default_web_client_id)).requestProfile().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         Intent intent = getIntent();
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             info_user.put("user_email", user.getEmail());
             info_user.put("user_photo", String.valueOf(user.getPhotoUrl()));
             info_user.put("user_id", user.getUid());
+            info_user.put("user_phoneNumber", user.getPhoneNumber());
             finish();
             Intent intent = new Intent(this, PerfilUsuario.class);
             intent.putExtra("info_user", info_user);

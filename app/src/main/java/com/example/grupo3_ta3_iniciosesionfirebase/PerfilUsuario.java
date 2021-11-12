@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,31 +24,39 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PerfilUsuario extends AppCompatActivity {
-    TextView txt_id, txt_name, txt_email;
+    TextView txt_id, txt_name, txt_email, txt_phone;
+    EditText edTweet, edFecha;
     ImageView imv_photo;
     DatabaseReference db_reference;
+    HashMap<String, String> info_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil_usuario);
         Intent intent = getIntent();
-        HashMap<String, String> info_user = (HashMap<String, String>)intent.getSerializableExtra("info_user");
+        info_user = (HashMap<String, String>)intent.getSerializableExtra("info_user");
 
         txt_id = findViewById(R.id.txt_userId);
         txt_name = findViewById(R.id.txt_nombre);
         txt_email = findViewById(R.id.txt_correo);
+        txt_phone = findViewById(R.id.txt_phone);
         imv_photo = findViewById(R.id.imv_foto);
 
         txt_id.setText("ID: "+info_user.get("user_id"));
         txt_name.setText(info_user.get("user_name"));
         txt_email.setText(info_user.get("user_email"));
+        txt_phone.setText(info_user.get("user_phoneNumber"));
         String photo = info_user.get("user_photo");
         Picasso.with(getApplicationContext()).load(photo).into(imv_photo);
 
+        edTweet = (EditText)findViewById(R.id.userTweet);
+        edFecha = (EditText)findViewById(R.id.fechaTweet);
+
         iniciarBaseDeDatos();
         leerTweets();
-        //escribirTweets(info_user.get("user_name"));
+
+        escribirTweets(info_user.get("user_name"));
     }
 
     public void cerrarSesion(View view){
@@ -78,27 +88,23 @@ public class PerfilUsuario extends AppCompatActivity {
     }
 
     public void escribirTweets(String autor){
-        String tweet = "hola mundo firebase Grupo 3";
-        String fecha = "10/06/2021"; //Fecha actual
+        String tweet = "Hola mundo firebase Grupo 3";
+        String fecha = "10/11/2021";
         DatabaseReference tweets = db_reference.child("Grupo3").child("tweets");
         tweets.setValue(tweet);
         tweets.child(tweet).child("autor").setValue(autor);
         tweets.child(tweet).child("fecha").setValue(fecha);
     }
 
-    public void publicar_tweet_user(String tweet, String fecha, String autor){
-        //String txt_fecha = fecha.toString();
-        DatabaseReference tweets = db_reference.child("Grupo3").child("tweets");
+    public void pushTweet(View view){
+        String user = info_user.get("user_name");
+        String tweet = edTweet.getText().toString();
+        String fecha = edFecha.getText().toString();
+        DatabaseReference tweets = db_reference.child("Grupo3").child("tweets").child("Rama "+user);
         tweets.setValue(tweet);
-        tweets.child(tweet).child("autor").setValue(autor);
+        tweets.child(tweet).child("autor").setValue(user);
         tweets.child(tweet).child("fecha").setValue(fecha);
-
         Toast.makeText(getApplicationContext(), "El tweet fue publicado", Toast.LENGTH_SHORT).show();
     }
 
-    public void pushTweetButton(View view){
-        publicar_tweet_user(findViewById(R.id.userTweet).toString(),
-                            findViewById(R.id.fechaTweet).toString(),
-                            findViewById(R.id.txt_nombre).toString());
-    }
 }
